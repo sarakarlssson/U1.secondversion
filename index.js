@@ -15,8 +15,30 @@ for (let i = 0; i < cities.length; i++) {
 // skapa table
 
 //userPrompt
+let userPrompt = prompt("Vilken stad? ")
+let isFound = false;
 
 // loopa igenom databasen, se ifall userprompt namn finns i databasen
+for (let i = 0; i < cities.length; i++) {
+    if (cities[i].name == userPrompt) {
+
+        isFound = true;
+        let h2 = document.querySelector("h2");
+        h2.textContent = userPrompt + " (" + cities[i].country + ") ";
+
+        console.log("Det funkar");        //om staden hittas, blir värdet true och loopen avslutas
+        break;
+
+    }
+}
+if (isFound != true) {          //om staden skiljer sig från true dvs är false och staden inte finns
+    let h2 = document.querySelector("h2");
+    h2.textContent = userPrompt + " finns inte i databasen :(";
+    console.log("Det funkar inte");
+
+}
+
+
 
 // if userprompt finns = blir det vår targetCity variabel
 //   sätta färg på targetCity
