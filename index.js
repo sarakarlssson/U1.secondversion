@@ -17,26 +17,68 @@ for (let i = 0; i < cities.length; i++) {
 //userPrompt
 let userPrompt = prompt("Vilken stad? ")
 let isFound = false;
+let targetCityId = null
+let compareCityId = null
+
+let closestCityId = null;
+let closestDistance = Infinity;
 
 // loopa igenom databasen, se ifall userprompt namn finns i databasen
 for (let i = 0; i < cities.length; i++) {
     if (cities[i].name == userPrompt) {
-
         isFound = true;
         let h2 = document.querySelector("h2");
         h2.textContent = userPrompt + " (" + cities[i].country + ") ";
+        targetCityId = cities[i].id;
+        console.log(targetCityId);
 
-        console.log("Det funkar");        //om staden hittas, blir värdet true och loopen avslutas
-        break;
+        console.log("Det funkar");
+        for (let j = 0; j < distances.length; j++) {
+            if ((distances[j].city1 == targetCityId) || (distances[j].city2 == targetCityId)) {
+                if (distances[j].city1 == targetCityId) {
+                    compareCityId = distances[j].city2;
+                } else if (distances[j].city2 == targetCityId) {
+                    compareCityId = distances[j].city1;
+                }
+
+                if (distances[j].distance < closestDistance) {
+                    closestDistance = distances[j].distance;
+                    closestCityId = compareCityId;
+
+                }
+            }
+
+
+            /*
+    
+            compareCityId = distances[j].city2;
+            console.log(compareCityId);
+    
+    
+        } else if (distances[j].city2 == targetCityId) {
+            compareCityId = distances[j].city1;
+            console.log(compareCityId);
+        }
+        */
+        }
+
+
+
+
+        break; //om staden hittas, blir värdet true och loopen avslutas
 
     }
 }
+
+
 if (isFound != true) {          //om staden skiljer sig från true dvs är false och staden inte finns
     let h2 = document.querySelector("h2");
     h2.textContent = userPrompt + " finns inte i databasen :(";
     console.log("Det funkar inte");
 
 }
+console.log("closest Distance = " + closestDistance / 10);
+console.log("closest CityId=" + closestCityId)
 
 
 
