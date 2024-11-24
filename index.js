@@ -3,10 +3,13 @@
 let cityNameBox;
 let userPrompt = prompt("Vilken stad? ")
 let closestCityId;
+let furthestCityId;
 let cityNameBoxId = null;
 
-function createCityBox(closestDistance) {
-    closestDistance = targetClosest(); //returvärdet sparas i variabel så vi kan använda det i denna funktion
+function createCityBox() {
+    let distanceResult = targetClosestFurthest(); //returvärdet sparas i variabel så vi kan använda det i denna funktion
+    let closestDistance = distanceResult.closestDistance
+    let furthestDistance = distanceResult.furthestDistance
 
     for (let i = 0; i < cities.length; i++) {
         let cityBoxesContainer = document.getElementById("cities");
@@ -17,7 +20,7 @@ function createCityBox(closestDistance) {
         cityBoxesContainer.appendChild(cityNameBox);
         //ge klass till cityNameBox, anropar funktionen som stylar cityNameBoxes
         styleCityNameBox(cityNameBox)
-        targetClosest(closestDistance);
+        targetClosestFurthest();
         //console.log(cityNameBox.id)
 
         if (userPrompt == cities[i].name) {     // den angivna staden blir markerad
@@ -26,30 +29,35 @@ function createCityBox(closestDistance) {
         }
         if (cities[i].id == closestCityId) {
             styleClosestNameBox(cityNameBox);
-            cityNameBox.textContent = cities[i].name + " ligger " + closestDistance + " bort "
+            cityNameBox.textContent = cities[i].name + " ligger " + closestDistance / 10 + " mil bort "
+        }
+        if (cities[i].id == furthestCityId) {
+            styleFurthestNameBox(cityNameBox);
+            cityNameBox.textContent = cities[i].name + " ligger " + furthestDistance / 10 + " mil bort "
+
         }
     }
 
 }
 // skapa table
 
-function targetClosest() {
+function targetClosestFurthest() {
     let isFound = false;
     let targetCityId = null
     let closestDistance = Infinity;
-    let closestCityName = null;
+
+    let furthestDistance = -Infinity;
 
     // loopa igenom databasen, se ifall userprompt namn finns i databasen
     for (let i = 0; i < cities.length; i++) {
 
-        let compareCityId = null
+        let compareCityId = null;
 
         if (cities[i].name == userPrompt) {
             isFound = true;
             let h2 = document.querySelector("h2");
             h2.textContent = userPrompt + " (" + cities[i].country + ") ";
             targetCityId = cities[i].id;
-            console.log("targetCityId: " + targetCityId);
 
             for (let j = 0; j < distances.length; j++) {
                 if ((distances[j].city1 == targetCityId) || (distances[j].city2 == targetCityId)) {
@@ -60,15 +68,21 @@ function targetClosest() {
                         compareCityId = distances[j].city1;
 
                     }
-
                     if (distances[j].distance < closestDistance) {
                         closestDistance = distances[j].distance;
                         closestCityId = compareCityId; //om vi hittar en stad som är närmre ändrar vi jämförd stad till närmst
-                        closestCityName = cities[closestCityId].name;
+                    }
+                    if (distances[j].distance > furthestDistance && distances[j].distance > closestDistance) {
+                        furthestDistance = distances[j].distance;
+                        furthestCityId = compareCityId;
+
                     }
                 }
             }
             //om staden hittas, blir värdet true och loopen avslutas
+            console.log(furthestCityId);
+            console.log(furthestDistance)
+            console.log(closestDistance)
             break;
         }
     }
@@ -77,7 +91,7 @@ function targetClosest() {
         let h2 = document.querySelector("h2");
         h2.textContent = userPrompt + " finns inte i databasen :(";
     }
-    return closestDistance;         //returnera värdet till createCityBox
+    return { closestDistance, furthestDistance }//, furthestDistance       //returnera värdet till createCityBox
 
 
 }
@@ -88,6 +102,11 @@ function styleCityNameBox(cityNameBox) {
 
 function styleClosestNameBox(cityNameBox) {
     cityNameBox.classList.add("closest");
+    // (div + closestCityId).add("closest");
+}
+
+function styleFurthestNameBox(cityNameBox) {
+    cityNameBox.classList.add("furthest");
     // (div + closestCityId).add("closest");
 }
 
