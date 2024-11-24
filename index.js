@@ -2,102 +2,100 @@
 // skapa alla cityBoxes
 let cityNameBox;
 let userPrompt = prompt("Vilken stad? ")
+let closestCityId;
+let cityNameBoxId = null;
 
-for (let i = 0; i < cities.length; i++) {
-    let cityBoxesContainer = document.getElementById("cities");
-    cityNameBox = document.createElement("div");
-    cityNameBox.id = "nameBox" + i;
-    cityNameBox.textContent = cities[i].name;
+function createCityBox(closestDistance) {
+    closestDistance = targetClosest(); //returvärdet sparas i variabel så vi kan använda det i denna funktion
 
-    //ge klass till cityNameBox
-    styleCityNameBox(cityNameBox)  //anropar funktionen som stylar cityNameBoxes
+    for (let i = 0; i < cities.length; i++) {
+        let cityBoxesContainer = document.getElementById("cities");
+        cityNameBox = document.createElement("div");
+        cityNameBox.id = `nameBox${cities[i].id}`
+        cityNameBox.textContent = cities[i].name;
 
-    console.log(cityNameBox)
-    if (userPrompt == cities[i].name) {     // den angivna staden blir markerad
-        styleFoundTargetCity(cityNameBox)
+        cityBoxesContainer.appendChild(cityNameBox);
+        //ge klass till cityNameBox, anropar funktionen som stylar cityNameBoxes
+        styleCityNameBox(cityNameBox)
+        targetClosest(closestDistance);
+        //console.log(cityNameBox.id)
+
+        if (userPrompt == cities[i].name) {     // den angivna staden blir markerad
+            styleFoundTargetCity(cityNameBox)
+            continue;
+        }
+        if (cities[i].id == closestCityId) {
+            styleClosestNameBox(cityNameBox);
+            cityNameBox.textContent = cities[i].name + " ligger " + closestDistance + " bort "
+        }
     }
 
-    cityBoxesContainer.appendChild(cityNameBox);
 }
-
 // skapa table
 
-//userPrompt
+function targetClosest() {
+    let isFound = false;
+    let targetCityId = null
+    let closestDistance = Infinity;
+    let closestCityName = null;
 
-let isFound = false;
-let targetCityId = null
-let compareCityId = null
+    // loopa igenom databasen, se ifall userprompt namn finns i databasen
+    for (let i = 0; i < cities.length; i++) {
 
-let closestCityId = null;
-let closestDistance = Infinity;
-let closestCityName = null;
+        let compareCityId = null
 
-// loopa igenom databasen, se ifall userprompt namn finns i databasen
-for (let i = 0; i < cities.length; i++) {
-    if (cities[i].name == userPrompt) {
-        isFound = true;
-        styleFoundTargetCity(targetCityId);
-        let h2 = document.querySelector("h2");
-        h2.textContent = userPrompt + " (" + cities[i].country + ") ";
-        targetCityId = cities[i].id;
-        console.log(targetCityId);
+        if (cities[i].name == userPrompt) {
+            isFound = true;
+            let h2 = document.querySelector("h2");
+            h2.textContent = userPrompt + " (" + cities[i].country + ") ";
+            targetCityId = cities[i].id;
+            console.log("targetCityId: " + targetCityId);
 
-        console.log("Det funkar");
-        for (let j = 0; j < distances.length; j++) {
-            if ((distances[j].city1 == targetCityId) || (distances[j].city2 == targetCityId)) {
-                if (distances[j].city1 == targetCityId) {
-                    compareCityId = distances[j].city2;
+            for (let j = 0; j < distances.length; j++) {
+                if ((distances[j].city1 == targetCityId) || (distances[j].city2 == targetCityId)) {
+                    if (distances[j].city1 == targetCityId) {
+                        compareCityId = distances[j].city2;
 
-                } else if (distances[j].city2 == targetCityId) {
-                    compareCityId = distances[j].city1;
+                    } else if (distances[j].city2 == targetCityId) {
+                        compareCityId = distances[j].city1;
 
+                    }
+
+                    if (distances[j].distance < closestDistance) {
+                        closestDistance = distances[j].distance;
+                        closestCityId = compareCityId; //om vi hittar en stad som är närmre ändrar vi jämförd stad till närmst
+                        closestCityName = cities[closestCityId].name;
+                    }
                 }
-
-                if (distances[j].distance < closestDistance) {
-                    closestDistance = distances[j].distance;
-                    closestCityId = compareCityId; //om vi hittar en stad som är närmre ändrar vi jämförd stad till närmst
-                    closestCityName = cities[closestCityId].name;
-
-
-                    styleClosestNameBox(closestCityId)
-
-                }
-
             }
-
-
-            /*
-    
-            compareCityId = distances[j].city2;
-            console.log(compareCityId);
-    
-    
-        } else if (distances[j].city2 == targetCityId) {
-            compareCityId = distances[j].city1;
-            console.log(compareCityId);
+            //om staden hittas, blir värdet true och loopen avslutas
+            break;
         }
-        */
-        }
-
-
-        console.log("closestCityName: " + closestCityName)
-
-        break; //om staden hittas, blir värdet true och loopen avslutas
-
     }
+
+    if (isFound != true) {          //om staden skiljer sig från true dvs är false och staden inte finns
+        let h2 = document.querySelector("h2");
+        h2.textContent = userPrompt + " finns inte i databasen :(";
+    }
+    return closestDistance;         //returnera värdet till createCityBox
+
+
 }
 
-
-if (isFound != true) {          //om staden skiljer sig från true dvs är false och staden inte finns
-    let h2 = document.querySelector("h2");
-    h2.textContent = userPrompt + " finns inte i databasen :(";
-    console.log("Det funkar inte");
-
+function styleCityNameBox(cityNameBox) {
+    cityNameBox.classList.add("cityBox");
 }
-console.log("closest Distance = " + closestDistance / 10);
-console.log("closest CityId=" + closestCityId)
 
+function styleClosestNameBox(cityNameBox) {
+    cityNameBox.classList.add("closest");
+    // (div + closestCityId).add("closest");
+}
 
+function styleFoundTargetCity(cityNameBox) {
+    cityNameBox.classList.add("target");
+}
+
+//div med id som i ska få klassen 
 
 // if userprompt finns = blir det vår targetCity variabel
 //   sätta färg på targetCity
@@ -114,17 +112,4 @@ console.log("closest CityId=" + closestCityId)
 
 //funktioner som stylar innehåll
 
-function styleCityNameBox(cityNameBox) {
-    cityNameBox.classList.add("cityBox");
-}
-
-function styleClosestNameBox() {
-    // (div + closestCityId).add("closest");
-}
-
-function styleFoundTargetCity(cityNameBox) {
-    cityNameBox.classList.add("target");
-}
-
-//div med id som i ska få klassen 
-
+createCityBox();
