@@ -115,6 +115,8 @@ function targetClosestFurthest() {
             let h2 = document.querySelector("h2");
             h2.textContent = userPrompt + " (" + cities[i].country + ") ";
             targetCityId = cities[i].id;
+            let title = document.querySelector("title");
+            title.textContent = cities[i].name;
 
             for (let j = 0; j < distances.length; j++) {
                 if ((distances[j].city1 == targetCityId) || (distances[j].city2 == targetCityId)) {
@@ -144,6 +146,8 @@ function targetClosestFurthest() {
     if (isFound != true) {          //om staden skiljer sig från true dvs är false och staden inte finns
         let h2 = document.querySelector("h2");
         h2.textContent = userPrompt + " finns inte i databasen :(";
+        let title = document.querySelector("title");
+        title.textContent = "Not Found";
     }
     return { closestDistance, furthestDistance }//, furthestDistance       //returnera värdet till createCityBox
 
