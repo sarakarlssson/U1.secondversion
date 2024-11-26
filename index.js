@@ -41,6 +41,8 @@ function createCityBox() {
 
 function createTable() {
 
+    let cell;
+
     let table = document.getElementById("table"); //skapa table 
     let emptyCell = document.createElement("div") //skapa första tom cell
     emptyCell.textContent = "tom";
@@ -57,20 +59,36 @@ function createTable() {
     }
     for (let j = 0; j < cities.length; j++) {
         let cellCityName = document.createElement("div");
-        cellCityName.textContent = cities[j].name;
+        cellCityName.textContent = cities[j].id + "-" + cities[j].name;
         styleFirstRowColumnCell(cellCityName);
         table.appendChild(cellCityName);
+
 
         for (let k = 0; k < cities.length; k++) {
             let cell = document.createElement("div")
             cell.textContent = "hej";
             styleCell(cell);
             table.appendChild(cell)
+            if (j % 2 == 0) {
+                cellCityName.classList.add("even_row");
+                cell.classList.add("even_row");
+            }
+
 
             if (j == k) {
                 cell.textContent = " "
-            }
+            } else {
+                for (let l = 0; l < distances.length; l++) {
+                    if (((distances[l].city1 == cities[j].id) && (distances[l].city2 == cities[k].id))
+                        || ((distances[l].city2 == cities[j].id) && (distances[l].city1 == cities[k].id))) {
+                        cell.textContent = distances[l].distance / 10;
 
+
+
+                        break;
+                    }
+                }
+            }
         }
     }
 }
