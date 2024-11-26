@@ -73,6 +73,9 @@ function createTable() {
                 cellCityName.classList.add("even_row");
                 cell.classList.add("even_row");
             }
+            if (k % 2 == 0) {
+                cell.classList.add("even_col");
+            }
 
 
             if (j == k) {
@@ -82,8 +85,6 @@ function createTable() {
                     if (((distances[l].city1 == cities[j].id) && (distances[l].city2 == cities[k].id))
                         || ((distances[l].city2 == cities[j].id) && (distances[l].city1 == cities[k].id))) {
                         cell.textContent = distances[l].distance / 10;
-
-
 
                         break;
                     }
