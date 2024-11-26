@@ -41,24 +41,43 @@ function createCityBox() {
 
 function createTable() {
 
-
     let table = document.getElementById("table"); //skapa table 
-    let emptyCell = document.createElement("div")
+    let emptyCell = document.createElement("div") //skapa första tom cell
     emptyCell.textContent = "tom";
-    styleFirstRowCell(emptyCell);
+    styleFirstRowColumnCell(emptyCell);
     table.appendChild(emptyCell);
     //skapa översta raden
+
     for (let i = 0; i < cities.length; i++) {
         let firstRowCell = document.createElement("div");
         firstRowCell.textContent = cities[i].id;
-        styleFirstRowCell(firstRowCell);
+        styleFirstRowColumnCell(firstRowCell);
         table.appendChild(firstRowCell);
         console.log(firstRowCell);
-        for (let j = 0; j < distances.length; j++) {
+    }
+    for (let j = 0; j < cities.length; j++) {
+        let cellCityName = document.createElement("div");
+        cellCityName.textContent = cities[j].name;
+        styleFirstRowColumnCell(cellCityName);
+        table.appendChild(cellCityName);
+
+        for (let k = 0; k < cities.length; k++) {
+            let cell = document.createElement("div")
+            cell.textContent = "hej";
+            styleCell(cell);
+            table.appendChild(cell)
+
+            if (j == k) {
+                cell.textContent = " "
+            }
 
         }
     }
 }
+
+
+
+
 
 function targetClosestFurthest() {
     let isFound = false;
@@ -129,8 +148,12 @@ function styleFoundTargetCity(cityNameBox) {
     cityNameBox.classList.add("target");
 }
 
-function styleFirstRowCell(firstRowCell) {
+function styleFirstRowColumnCell(firstRowCell, cellCityName) {
     firstRowCell.classList.add("cell");
+    firstRowCell.classList.add("head_row");
+}
+function styleCell(cell) {
+    cell.classList.add("cell")
 }
 
 //div med id som i ska få klassen 
