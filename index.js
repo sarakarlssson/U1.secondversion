@@ -37,9 +37,28 @@ function createCityBox() {
 
         }
     }
-
 }
-// skapa table
+
+function createTable() {
+
+
+    let table = document.getElementById("table"); //skapa table 
+    let emptyCell = document.createElement("div")
+    emptyCell.textContent = "tom";
+    styleFirstRowCell(emptyCell);
+    table.appendChild(emptyCell);
+    //skapa översta raden
+    for (let i = 0; i < cities.length; i++) {
+        let firstRowCell = document.createElement("div");
+        firstRowCell.textContent = cities[i].id;
+        styleFirstRowCell(firstRowCell);
+        table.appendChild(firstRowCell);
+        console.log(firstRowCell);
+        for (let j = 0; j < distances.length; j++) {
+
+        }
+    }
+}
 
 function targetClosestFurthest() {
     let isFound = false;
@@ -80,9 +99,6 @@ function targetClosestFurthest() {
                 }
             }
             //om staden hittas, blir värdet true och loopen avslutas
-            console.log(furthestCityId);
-            console.log(furthestDistance)
-            console.log(closestDistance)
             break;
         }
     }
@@ -92,7 +108,6 @@ function targetClosestFurthest() {
         h2.textContent = userPrompt + " finns inte i databasen :(";
     }
     return { closestDistance, furthestDistance }//, furthestDistance       //returnera värdet till createCityBox
-
 
 }
 
@@ -114,6 +129,10 @@ function styleFoundTargetCity(cityNameBox) {
     cityNameBox.classList.add("target");
 }
 
+function styleFirstRowCell(firstRowCell) {
+    firstRowCell.classList.add("cell");
+}
+
 //div med id som i ska få klassen 
 
 // if userprompt finns = blir det vår targetCity variabel
@@ -132,3 +151,4 @@ function styleFoundTargetCity(cityNameBox) {
 //funktioner som stylar innehåll
 
 createCityBox();
+createTable();
